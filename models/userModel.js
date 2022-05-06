@@ -4,14 +4,10 @@ const Schema = mongoose.Schema
 
 const userSchema = new Schema({
     name: String,
-    username: {
-      type: String,
-      unique: [true, "The Username is already in use"]
-    },
     email: {
       type: String,
       required: true,
-      unique: [true, "The Email is already in use"]
+      unique: true
     },
     age: Number,
     occupation: String,

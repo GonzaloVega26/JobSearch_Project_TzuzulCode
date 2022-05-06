@@ -1,72 +1,71 @@
-const userModel = require('../models/userModel')
+const userModel = require("../models/userModel");
 
-class User{
-
-    async getAll(){
-        try{
-            const users = await userModel.find()
-            return users // Array of Users
-        }catch(error){
-            console.log(error)
-        }
+class User {
+  async getAll() {
+    try {
+      const users = await userModel.find();
+      return users; // Array of Users
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    async getOne(mail){
-        
-        try{
-            const user = await userModel.findOne(mail)
-            console.log(user)
-            return user // Objeto
-        }catch(error){
-            console.log(error)
-        }
+  async getOneByEmail(email) {
+    try {
+      const user = await userModel.findOne({email});
+      return user; // Objeto
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    async create(data){
-        try{
-            
-            if(validate){
-            const user = await userModel.create(destructurarData(data))
-            return user // Objeto
+  async create(data) {
+    try {
+      if (validate) {
+        const user = await userModel.create(data);
+        return user; // Objeto
+      }
+    } catch (error) {
+      console.log(error)
+      
+      if (error.code === 11000) {
+        const keyValues = error.keyValue
+        const message = []
+
+        for (const property in keyValues) {
+          message.push(`The ${property}: ${keyValues[property]} is already in use`)
         }
-        }catch(error){
-            console.log(error)
-        }
+        return {
+          error: true,
+          message,
+        };
+      }
     }
+  }
 
-    async update(id,data){
-        try{
-            const newUser = await userModel.findByIdAndUpdate(id,destructurarData(data),{new:true})
-            
-            return newUser // Objeto
-        }catch(error){
-            console.log(error)
-        }
+  async update(id, data) {
+    try {
+      const newUser = await userModel.findByIdAndUpdate(id, data, {
+        new: true,
+      });
+
+      return newUser; // Objeto
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    async delete(id){
-        try{
-            const user = await userModel.findByIdAndDelete(id)
-            return user
-        }catch(error){
-            console.log(error)
-        }
+  async delete(id) {
+    try {
+      const user = await userModel.findByIdAndDelete(id);
+      return user;
+    } catch (error) {
+      console.log(error);
     }
-
-    
+  }
 }
-const validate = (data)=>{
-    if(data.mail.contains('@') && data.password.length >= 4 ) return true  
-    
-}
+const validate = (data) => {
+  if (data.mail.contains("@") && data.password.length >= 4) return true;
+};
 
-const destructurarData = (data)=>{
-    
-    const {name,email,username,occupation,password} = data
-    
-    const user = {name, email, username, occupation, password  }
-    
-    return  user
-}
-
-module.exports = User
+module.exports = User;
