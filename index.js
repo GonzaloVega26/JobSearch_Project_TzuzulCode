@@ -4,6 +4,7 @@ const {connection} = require("./config/db")
 
 
 const users = require("./routes/userRoutes")
+const auth = require("./routes/authRoutes")
 
 connection()
 
@@ -14,6 +15,7 @@ app.use(express.json())
 
 //Usando routes
 users(app)
+auth(app)
 
 app.listen(PORT,()=>{
     console.log("Listening on http://localhost:"+PORT)
