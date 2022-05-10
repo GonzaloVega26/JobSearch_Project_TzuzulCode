@@ -1,4 +1,5 @@
 const {PORT} = require("./config/index")
+const morgan = require('morgan')
 const express = require('express')
 const {connection} = require("./config/db")
 
@@ -13,7 +14,7 @@ const app = express()
 
 //Middleware de JSON
 app.use(express.json())
-
+app.use(morgan('tiny')) 
 //Usando routes
 users(app)
 auth(app)
