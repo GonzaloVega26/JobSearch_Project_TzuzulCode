@@ -7,15 +7,16 @@ function authValidation(req, res, next) {
     req.headers.authorization.startsWith("Bearer")
   ) {
     const bearer = req.headers.authorization;
-console.log("en auth ")
+
     const [, token] = bearer.split("Bearer "); //Destructuring arrays.
 
     if (token) {
       try {
         const decoded = jwt.verify(token, jwtSecret);
         req.user = decoded
-        console.log(decoded)
+        
        next();
+       return
       } catch ({ name, message }) {
         return res.json({
           error: true,
@@ -34,3 +35,5 @@ console.log("en auth ")
 }
 
 module.exports = authValidation;
+
+

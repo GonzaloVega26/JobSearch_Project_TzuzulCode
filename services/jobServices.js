@@ -10,6 +10,15 @@ class Job {
     }
   }
 
+  async getAllWithCondition(condition){
+    try {
+      const jobs = await jobModel.find(condition);
+      return jobs; // Array of Jobs
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async getOneById(id) {
     try {
       const job = await jobModel.findById(id);

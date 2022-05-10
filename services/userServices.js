@@ -13,7 +13,17 @@ class User {
   async getOneByEmail(email) {
     try {
       const user = await userModel.findOne({email});
-      return user; // Objeto
+     
+      return user; 
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getOneById(id){
+    try {
+      const user = await userModel.findById(id);
+      return user;
     } catch (error) {
       console.log(error);
     }
@@ -58,13 +68,15 @@ class User {
   async delete(id) {
     try {
       const user = await userModel.findByIdAndDelete(id);
+      
       return user;
     } catch (error) {
       console.log(error);
     }
   }
 
-  async searchByOccupation(fields){
+
+  async searchByField(fields){
     try {
       
       const rawData = await userModel.find(fields)
