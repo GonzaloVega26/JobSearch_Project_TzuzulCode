@@ -43,6 +43,7 @@ class Auth{
         const userData = {
             name:user.name,
             email:user.email,
+            role: user.role,
             id:user.id
         }
         const token = this.#createToken(userData)

@@ -15,10 +15,12 @@ const userSchema = new Schema({
       type: String,
       required: true
     },
-    role: {
-      type: String,
-      default: "user"
-    }
+    role:{
+      type:String,
+      enum:["applicant","employer","admin"]
+      // Applicant: person who search a job
+      // Employer: person who offers a job
+  }
   })
 
   const userModel = mongoose.model('User', userSchema);

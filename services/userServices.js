@@ -63,9 +63,26 @@ class User {
       console.log(error);
     }
   }
+
+  async searchByOccupation(fields){
+    try {
+      
+      const rawData = await userModel.find(fields)
+      const users = []
+      rawData.forEach(user =>{
+        const {name,email,age,occupation} = user
+        users.push({name,email,age,occupation})
+      })
+      return users
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
+  
 const validate = (data) => {
   if (data.mail.contains("@") && data.password.length >= 4) return true;
 };
+
 
 module.exports = User;
