@@ -17,11 +17,12 @@ const userSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ["applicant", "employer", "admin"],
+    enum: ["applicant", "employer", "admin"]
     // Applicant: person who search a job
     // Employer: person who offers a job
   },
-  jobs_applicated: [{ type: String }]
+  jobs_applicated: [{ type: String }],
+  knowledge: [{type:String}]
 });
 
 const userModel = mongoose.model("User", userSchema);
