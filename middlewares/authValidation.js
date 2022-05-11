@@ -13,7 +13,12 @@ function authValidation(req, res, next) {
     if (token) {
       try {
         const decoded = jwt.verify(token, jwtSecret);
-        req.user = decoded
+        req.user = {
+          _id: decoded.id,
+          name : decoded.name,
+          email: decoded.email,
+          role: decoded.role
+        }
         
        next();
        return
