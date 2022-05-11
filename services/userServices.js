@@ -10,19 +10,10 @@ class User {
     }
   }
 
-  async getOneByEmail(email) {
+  async getOneUser(data){
+    console.log(data)
     try {
-      const user = await userModel.findOne({email});
-     
-      return user; 
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async getOneById(id){
-    try {
-      const user = await userModel.findById(id);
+      const user = await userModel.findOne(data);
       return user;
     } catch (error) {
       console.log(error);
@@ -58,7 +49,7 @@ class User {
       const newUser = await userModel.findByIdAndUpdate(id, data, {
         new: true,
       });
-
+      
       return newUser; // Objeto
     } catch (error) {
       console.log(error);

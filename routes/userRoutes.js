@@ -30,41 +30,51 @@ function users(app) {
   })
 
   router.get("/myjobs", authValidation, async (req, res) => {
-    const user = await userServ.getOneById(req.user.id);
-    console.log(req.user)
+    const user = await userServ.getOneUser(req.user);
     if (user) {
       //Making two separate consult because the lookup operator don't work
       const jobsId = user.jobs_applicated;
       const jobs = await jobServ.getAllWithCondition({"_id": jobsId})
-      console.log(jobs)
       if (jobs) return res.json(jobs)
+
+      return res.json({
+        error:true,
+        message: "Jobs Not Found"
+      })
     }
 
     return res.json({
       error: true,
-      message: "User not found",
+      message: "User Not Found",
     });
   });
 
 
-  router.post("/", async (req, res) => {
-    const user = await userServ.create(req.body);
-    return res.json(user);
-  });
-
-  router.put("/:id", async (req, res) => {
+  router.put("/update-profile/:id", authValidation, async (req, res) => {
     const user = await userServ.update(req.params.id, req.body);
     return res.json(user);
   });
 
-  router.delete("/:id", async (req, res) => {
+  router.delete("/delete/:id", authValidation, async (req, res) => {
+  
+    if (req.user.role === "admin") {
     const user = await userServ.delete(req.params.id);
     return res.json(user);
+    }
+    if(req.user._id === req.params.id){
+     const user = await userServ.delete(req.params.id);
+     return res.json(user);
+    }
+
+    return res.status(403).json({
+      error:true,
+      message: "Insufficient Permissions"
+    })
   });
 
-  router.get("/:email",authValidation, async (req, res) => {
-    const user = await userServ.getOneByEmail(req.params.email); // One User
+  router.get("/search-user/:email", authValidation, async (req, res) => {
     
+    const user = await userServ.getOneUser({"email": req.params.email});
     if (req.user.role === "admin") {
       return res.json(user);
     }

@@ -8,7 +8,7 @@ class Auth{
    async login(data){
         const userService = new UserService()
         
-        const user = await userService.getOneByEmail(data.email)
+        const user = await userService.getOneUser({"email": data.email})
 
         if(user){
             const result = await bcrypt.compare(data.password, user.password)
@@ -38,7 +38,7 @@ class Auth{
         return this.#sendInformation(user)
 
     }
-
+    
     #sendInformation(user){
         const userData = {
             name:user.name,
