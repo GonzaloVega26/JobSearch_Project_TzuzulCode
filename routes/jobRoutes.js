@@ -62,6 +62,8 @@ function jobs(app) {
   router.post("/", async (req, res) => {
     console.log(req.user.role)
     if (req.user.role === "employer" || req.user.role == "admin") {
+      req.body["employer_id"] = req.user._id
+      
       //Only employers and admins can create
       const job = await jobServ.create(req.body);
       return res.json(job);

@@ -1,5 +1,6 @@
 const {PORT} = require("./config/index")
 const morgan = require('morgan')
+const cors = require('cors')
 const express = require('express')
 const {connection} = require("./config/db")
 
@@ -13,6 +14,9 @@ connection()
 const app = express()
 
 //Middleware de JSON
+app.use(cors({
+    origin:["http://localhost:3000"]
+}))
 app.use(express.json())
 app.use(morgan('tiny')) 
 //Usando routes
