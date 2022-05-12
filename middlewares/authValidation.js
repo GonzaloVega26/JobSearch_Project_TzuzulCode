@@ -19,7 +19,6 @@ function authValidation(req, res, next) {
           email: decoded.email,
           role: decoded.role
         }
-        
        next();
        return
       } catch ({ name, message }) {

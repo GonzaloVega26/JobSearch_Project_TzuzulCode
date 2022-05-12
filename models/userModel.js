@@ -22,7 +22,9 @@ const userSchema = new Schema({
     // Employer: person who offers a job
   },
   jobs_applicated: [{ type: String }],
-  knowledge: [{type:String}]
+  knowledge: [{type:String}],
+  image_url: {type: String,
+  default: "https://icon-library.com/images/anon-icon/anon-icon-11.jpg"}
 });
 
 const userModel = mongoose.model("User", userSchema);
