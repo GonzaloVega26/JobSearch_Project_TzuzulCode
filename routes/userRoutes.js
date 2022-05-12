@@ -17,17 +17,59 @@ function users(app) {
     return res.json(users);
   });
 
-  router.post("/search", async (req,res)=>{
-    const users = await userServ.searchByFields(req.body)
-    return res.json(users)
+
+  router.post("/search", authValidation, async (req,res)=>{
+    const users = await userServ.getAllWithCondition(req.body)
+    if(users) return res.json(users)
+    return res.json({error:true,
+    message: "Field not Valid"})
   })
 
-  router.post("/application/:idjob",authValidation, async (req,res)=>{
-    const idJob = req.params.idjob
-    //const user = await userServ.find(req.user)
-    const updateResult = await userServ.update(req.user.id, {$push: { jobs_applicated: idJob }})
-    return res.json(updateResult)
-  })
+  router.post("/apply-job/:idjob", authValidation, async (req, res) => {
+    const job = await jobServ.getOneById(req.params.idjob);
+    console.log(job);
+    if (job) {
+      const {_id: idUser,name,email,jobs_applicated} = await userServ.update(
+          req.user._id, {$push: { jobs_applicated: req.params.idjob }}
+          );
+      const {_id: idJob,title,salary,location} = await jobServ.update(
+        req.params.idjob, {$push: { applications: req.user._id }}
+        );
+      return res.json({
+        user: { idUser, name, email, jobs_applicated },
+        job: { idJob, title, salary, location },
+      });
+    } 
+    
+      return res.json({
+        error: true,
+        message: "Job Not Found",
+      });
+    
+  });
+
+  router.post("/cancel-job/:idjob", authValidation, async (req, res) => {
+    const job = await jobServ.getOneById(req.params.idjob);
+    console.log(job);
+    if (job) {
+      const {_id: idUser,name,email,jobs_applicated} = await userServ.update(
+        req.user._id, {$pull: { jobs_applicated: req.params.idjob }}
+        );
+        const {_id: idJob,title,salary,location} = await jobServ.update(
+          req.params.idjob, {$pull: { applications: req.user._id }}
+          );
+      return res.json({
+        user: { idUser, name, email, jobs_applicated },
+        job: { idJob, title, salary, location },
+      });
+    } 
+    
+      return res.json({
+        error: true,
+        message: "Job Not Found",
+      });
+    
+  });
 
   router.get("/myjobs", authValidation, async (req, res) => {
     const user = await userServ.getOneUser(req.user);
@@ -51,7 +93,15 @@ function users(app) {
 
 
   router.put("/update-profile/:id", authValidation, async (req, res) => {
-    const user = await userServ.update(req.params.id, req.body);
+    if (req.user.role === "admin") {
+      const user = await userServ.update(req.params.id, req.body);
+      return res.json(user);
+      }
+      if(req.user._id === req.params.id){
+        const user = await userServ.update(req.params.id, req.body);
+       return res.json(user);
+      }
+    
     return res.json(user);
   });
 
@@ -72,9 +122,10 @@ function users(app) {
     })
   });
 
-  router.get("/search-user/:email", authValidation, async (req, res) => {
+  router.get("/search-user", authValidation, async (req, res) => {
     
-    const user = await userServ.getOneUser({"email": req.params.email});
+    const user = await userServ.getOneUser(req.body);
+    if(user){
     if (req.user.role === "admin") {
       return res.json(user);
     }
@@ -85,7 +136,11 @@ function users(app) {
       age,
       email,
       occupation,
-    });
+    });}
+    return res.json({
+      error:true,
+      message: "User not Found"
+    })
   });
 }
 

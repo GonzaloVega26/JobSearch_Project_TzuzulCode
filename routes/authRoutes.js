@@ -35,8 +35,12 @@ function auth(app){
         console.log(user)
         if(user){
             const result = await userServ.update(user.id,{$set:{role:"admin"}})
+            
             console.log(result)
-            if(result) return res.json(result)
+            if(result) {
+                const {_id, name, email, role} = result
+                return res.json({_id, name, email, role})
+            }
         }
 
         return res.json({

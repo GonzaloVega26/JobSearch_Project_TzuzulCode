@@ -3,8 +3,21 @@ const userModel = require("../models/userModel");
 class User {
   async getAll() {
     try {
-      const users = await userModel.find();
+      const users = await userModel.find({role: {$not : {$eq:"admin"}}});
       return users; // Array of Users
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async getAllWithCondition(condition){
+    
+    for (const key in condition) {
+      if(condition[key] === "admin") return null
+    }
+    
+    try {
+      const users = await userModel.find(condition,{password: 0, role: 0, jobs_applicated: 0, __v: 0});
+      return users;
     } catch (error) {
       console.log(error);
     }
@@ -67,20 +80,7 @@ class User {
   }
 
 
-  async searchByField(fields){
-    try {
-      
-      const rawData = await userModel.find(fields)
-      const users = []
-      rawData.forEach(user =>{
-        const {name,email,age,occupation} = user
-        users.push({name,email,age,occupation})
-      })
-      return users
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  
 }
   
 const validate = (data) => {
