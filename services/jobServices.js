@@ -50,10 +50,12 @@ class Job {
       const newJob = await jobModel.findByIdAndUpdate(id, data, {
         new: true,
       });
-
+      console.log(newJob)
       return newJob; // Objeto
     } catch (error) {
-      console.log(error);
+     // console.log(error);
+     
+      return null
     }
   }
 
@@ -62,7 +64,8 @@ class Job {
       const job = await jobModel.findByIdAndDelete(id);
       return job;
     } catch (error) {
-      console.log(error);
+      console.log(error.reason);
+      console.log()
     }
   }
 
