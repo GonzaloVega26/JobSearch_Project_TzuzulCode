@@ -71,6 +71,25 @@ function jobs(app) {
     return res.json(insufficientPermissions());
   });
 
+  router.post("/search-job/titlte", async (req, res) => {
+        
+      const jobs = await jobServ.getAllRelatedToTitle(req.body.title)
+      return res.json(jobs);
+    
+  });
+  router.post("/search-job/requirements", async (req, res) => {
+        
+      const jobs = await jobServ.getAllRelatedToRequirements(req.body.requirements)
+      return res.json(jobs);
+    
+  });
+  router.post("/search-job/salary", async (req, res) => {
+        
+      const jobs = await jobServ.getAllRelatedToSalary(req.body)
+      return res.json(jobs);
+    
+  });
+
   router.put("/update/:id", async (req, res) => {
     if(req.user.role === "employer" || req.user.role == "admin") {
       //Only employers and admins can modify
